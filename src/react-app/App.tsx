@@ -1,66 +1,74 @@
-// src/App.tsx
-
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import cloudflareLogo from "./assets/Cloudflare_Logo.svg";
-import honoLogo from "./assets/hono.svg";
-import "./App.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
-	const [count, setCount] = useState(0);
-	const [name, setName] = useState("unknown");
+  const {
+    isLoading, // Loading state, the SDK needs to reach Auth0 on load
+    isAuthenticated,
+    error,
+    loginWithRedirect, // Starts the login flow
+    logout: auth0Logout, // Starts the logout flow
+    user, // User profile
+    getAccessTokenSilently,
+    getAccessTokenWithPopup,
+  } = useAuth0();
 
-	return (
-		<>
-			<div>
-				<a href="https://vite.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-				<a href="https://hono.dev/" target="_blank">
-					<img src={honoLogo} className="logo cloudflare" alt="Hono logo" />
-				</a>
-				<a href="https://workers.cloudflare.com/" target="_blank">
-					<img
-						src={cloudflareLogo}
-						className="logo cloudflare"
-						alt="Cloudflare logo"
-					/>
-				</a>
-			</div>
-			<h1>Vite + React + Hono + Cloudflare</h1>
-			<div className="card">
-				<button
-					onClick={() => setCount((count) => count + 1)}
-					aria-label="increment"
-				>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
-			<div className="card">
-				<button
-					onClick={() => {
-						fetch("/api/")
-							.then((res) => res.json() as Promise<{ name: string }>)
-							.then((data) => setName(data.name));
-					}}
-					aria-label="get name"
-				>
-					Name from API is: {name}
-				</button>
-				<p>
-					Edit <code>worker/index.ts</code> to change the name
-				</p>
-			</div>
-			<p className="read-the-docs">Click on the logos to learn more</p>
-		</>
-	);
+  const login = () =>
+    loginWithRedirect();
+
+  const signup = () =>
+    loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } });
+
+  const logout = () =>
+    auth0Logout({ logoutParams: { returnTo: window.location.origin } });
+
+  const listProfiles = async () => {
+    try {
+      const token = await getAccessTokenSilently({
+        authorizationParams: {
+          audience: import.meta.env.VITE_API_URL,
+        }
+      }).catch((_) => {
+        return getAccessTokenWithPopup({
+          authorizationParams: {
+            audience: import.meta.env.VITE_API_URL,
+          }
+        });
+      });
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/v1/profiles`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const responseData = await response.json();
+
+      console.log(responseData.message);
+    } catch (error: unknown) {
+      console.error(error);
+    }
+  };
+
+  if (isLoading) return "Loading...";
+
+  return isAuthenticated ? (
+    <>
+      <p>Logged in as {user?.email}</p>
+      <h1>User Profile</h1>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
+      <button onClick={listProfiles}>List profiles</button>
+      <button onClick={logout}>Logout</button>
+    </>
+  ) : (
+    <>
+      {error && <p>Error: {error.message}</p>}
+      <button onClick={signup}>Signup</button>
+      <button onClick={login}>Login</button>
+    </>
+  );
 }
 
 export default App;
