@@ -1,5 +1,11 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
+const authSettings = {
+  authorizationParams: {
+    audience: `${import.meta.env.VITE_API_URL}/`,
+  }
+};
+
 function App() {
   const {
     isLoading, // Loading state, the SDK needs to reach Auth0 on load
@@ -23,17 +29,8 @@ function App() {
 
   const listProfiles = async () => {
     try {
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: import.meta.env.VITE_API_URL,
-        }
-      }).catch((_) => {
-        return getAccessTokenWithPopup({
-          authorizationParams: {
-            audience: import.meta.env.VITE_API_URL,
-          }
-        });
-      });
+      const token = await getAccessTokenSilently(authSettings)
+        .catch(() => getAccessTokenWithPopup(authSettings));
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/v1/profiles`,
