@@ -1,4 +1,12 @@
 import {useAuth0} from '@auth0/auth0-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {Button} from '@/components/ui/button'
 
 const accessTokenSettings = {
   authorizationParams: {
@@ -52,13 +60,18 @@ export function App() {
   if (isLoading) return "Loading...";
 
   return isAuthenticated ? (
-    <>
-      <p>Logged in as {user?.email}</p>
-      <h1>User Profile</h1>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <button onClick={listProfiles}>List profiles</button>
-      <button onClick={logout}>Logout</button>
-    </>
+    <Card className="max-w-sm">
+      <CardHeader>
+        <CardTitle>User Profile</CardTitle>
+        <CardDescription>
+          Logged in as {user?.email}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={listProfiles}>List profiles</Button>
+        <Button onClick={logout}>Logout</Button>
+      </CardContent>
+    </Card>
   ) : (
     <>
       {error && <p>Error: {error.message}</p>}
