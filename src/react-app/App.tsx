@@ -6,7 +6,7 @@ const accessTokenSettings = {
   },
 };
 
-function App() {
+export function App() {
   const {
     isLoading, // Loading state, the SDK needs to reach Auth0 on load
     isAuthenticated,
@@ -67,5 +67,3 @@ function App() {
     </>
   );
 }
-
-export default App;
