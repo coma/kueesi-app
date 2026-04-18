@@ -4,3 +4,61 @@
     --pico-color: var(--pico-secondary-inverse);
     cursor: pointer;
 }
+
+button[type=submit] {
+  width: auto;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: calc(var(--pico-spacing) / 2);
+}
+
+.actions > button {
+  display: block;
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 0 calc(var(--pico-spacing) / 2);
+}
+
+button > * + span {
+  margin-left: 0.5em;
+}
+
+input[readonly]:focus {
+  --pico-border-color: var(--pico-form-element-active-border-color);
+  --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color);
+}
+
+dialog {
+  opacity: 0;
+  transition:
+    opacity 200ms ease-out,
+    overlay 400ms allow-discrete,
+    display 400ms allow-discrete;
+}
+
+dialog > article {
+  transform: translateY(-100%);
+  transition: transform 400ms ease-out;
+}
+
+dialog:open {
+  opacity: 1;
+}
+
+dialog:open > article {
+  transform: translateY(0);
+}
+
+@starting-style {
+  dialog:open {
+    opacity: 0;
+  }
+
+  dialog:open > article {
+    transform: translateY(-100%);
+  }
+}

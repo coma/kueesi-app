@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import {useAuth0} from '@auth0/auth0-react';
 import {Navigate, Outlet, NavLink} from 'react-router';
-import {WaitView} from './WaitView';
+import {WaitView} from '@/views/WaitView';
 import style from './PrivateLayout.module.css';
 
 export function PrivateLayout() {

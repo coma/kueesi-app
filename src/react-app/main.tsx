@@ -2,15 +2,15 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Auth0Provider} from '@auth0/auth0-react';
 import {BrowserRouter, Routes, Route} from 'react-router';
-import {PrivacyView} from './PrivacyView';
-import {TosView} from './TosView';
-import {LoginView} from './LoginView';
-import {PrivateLayout} from './PrivateLayout';
-import {DashboardView} from './DashboardView';
-import {ProfilesView} from './ProfilesView';
-import {BoxesView} from './BoxesView';
-import {OrdersView} from './OrdersView';
-import {SettingsView} from './SettingsView';
+import {PrivacyView} from './views/PrivacyView';
+import {TosView} from './views/TosView';
+import {LoginView} from './views/LoginView';
+import {PrivateLayout} from './layouts/PrivateLayout';
+import {DashboardView} from './views/DashboardView';
+import {ProfilesView} from './views/ProfilesView';
+import {BoxesView} from './views/BoxesView';
+import {OrdersView} from './views/OrdersView';
+import {SettingsView} from './views/SettingsView';
 import './main.css';
 
 createRoot(document.getElementById('root')!).render(
